@@ -1,4 +1,22 @@
-import { Range } from "./range";
+import { FiniteBoundary, Range } from "./range";
+
+const compareLeftFiniteBoundaries =
+  (first: FiniteBoundary) =>
+  (second: FiniteBoundary): boolean => {
+    return (
+      first.value < second.value ||
+      (first.value === second.value && (first.inclusion === "INCLUSIVE" || second.inclusion === "EXCLUSIVE"))
+    );
+  };
+
+const compareRightFiniteBoundaries =
+  (first: FiniteBoundary) =>
+  (second: FiniteBoundary): boolean => {
+    return (
+      first.value > second.value ||
+      (first.value === second.value && (first.inclusion === "INCLUSIVE" || second.inclusion === "EXCLUSIVE"))
+    );
+  };
 
 const contains =
   (first: Range) =>
@@ -7,18 +25,30 @@ const contains =
       return true;
     }
 
-    if (first !== "ø") {
-      return (
-        (first[0].value < second[0].value ||
-          (first[0].value === second[0].value &&
-            (first[0].inclusion === "INCLUSIVE" || second[0].inclusion === "EXCLUSIVE"))) &&
-        (first[1].value > second[1].value ||
-          (first[1].value === second[1].value &&
-            (first[1].inclusion === "INCLUSIVE" || second[1].inclusion === "EXCLUSIVE")))
-      );
+    if (first === "ø") {
+      return false;
     }
 
-    return false;
+    if (first[1] === "+∞") {
+      if (first[0] === "-∞") {
+        return true;
+      }
+      return second[0] !== "-∞" && compareLeftFiniteBoundaries(first[0])(second[0]);
+    }
+
+    if (second[1] === "+∞") {
+      return false;
+    }
+
+    if (first[0] === "-∞") {
+      return compareRightFiniteBoundaries(first[1])(second[1]);
+    }
+
+    if (second[0] === "-∞") {
+      return false;
+    }
+
+    return compareLeftFiniteBoundaries(first[0])(second[0]) && compareRightFiniteBoundaries(first[1])(second[1]);
   };
 
 export default contains;

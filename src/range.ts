@@ -1,6 +1,10 @@
-export type Boundary = {
+export type FiniteBoundary = {
   value: number;
   inclusion: "INCLUSIVE" | "EXCLUSIVE";
 };
 
-export type Range = [Boundary, Boundary] | "ø";
+type LeftBoundary = FiniteBoundary | "-∞";
+
+type RightBoundary = FiniteBoundary | "+∞";
+
+export type Range = [LeftBoundary, RightBoundary] | "ø";

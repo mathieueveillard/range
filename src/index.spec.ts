@@ -373,4 +373,199 @@ describe("Test of contains", function () {
     // WHEN
     expect(contains(first)(second)).toEqual(true);
   });
+
+  test("[0, +∞[ contains [0, 1]", function () {
+    // GIVEN
+    const first: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      "+∞",
+    ];
+    const second: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+
+    // WHEN
+    expect(contains(first)(second)).toEqual(true);
+  });
+
+  test("]0, +∞[ does not contain [0, 1]", function () {
+    // GIVEN
+    const first: Range = [
+      {
+        value: 0,
+        inclusion: "EXCLUSIVE",
+      },
+      "+∞",
+    ];
+    const second: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+
+    // WHEN
+    expect(contains(first)(second)).toEqual(false);
+  });
+
+  test("[0, +∞[ contains [0, +∞[", function () {
+    // GIVEN
+    const first: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      "+∞",
+    ];
+    const second: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      "+∞",
+    ];
+
+    // WHEN
+    expect(contains(first)(second)).toEqual(true);
+  });
+
+  test("[0, 1] does not contain [0, +∞[", function () {
+    // GIVEN
+    const first: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+    const second: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      "+∞",
+    ];
+
+    // WHEN
+    expect(contains(first)(second)).toEqual(false);
+  });
+
+  test("]-∞, 1] contains [0, 1]", function () {
+    // GIVEN
+    const first: Range = [
+      "-∞",
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+    const second: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+
+    // WHEN
+    expect(contains(first)(second)).toEqual(true);
+  });
+
+  test("]-∞, 1[ does not contain [0, 1]", function () {
+    // GIVEN
+    const first: Range = [
+      "-∞",
+      {
+        value: 1,
+        inclusion: "EXCLUSIVE",
+      },
+    ];
+    const second: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+
+    // WHEN
+    expect(contains(first)(second)).toEqual(false);
+  });
+
+  test("]-∞, 1] contains ]-∞, 1]", function () {
+    // GIVEN
+    const first: Range = [
+      "-∞",
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+    const second: Range = [
+      "-∞",
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+
+    // WHEN
+    expect(contains(first)(second)).toEqual(true);
+  });
+
+  test("[0, 1] does not contain ]-∞, 1]", function () {
+    // GIVEN
+    const first: Range = [
+      {
+        value: 0,
+        inclusion: "INCLUSIVE",
+      },
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+    const second: Range = [
+      "-∞",
+      {
+        value: 1,
+        inclusion: "INCLUSIVE",
+      },
+    ];
+
+    // WHEN
+    expect(contains(first)(second)).toEqual(false);
+  });
+
+  test("]-∞, +∞[ contains ]-∞, +∞[", function () {
+    // GIVEN
+    const first: Range = ["-∞", "+∞"];
+    const second: Range = ["-∞", "+∞"];
+
+    // WHEN
+    expect(contains(first)(second)).toEqual(true);
+  });
 });
